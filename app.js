@@ -4,7 +4,7 @@ const { spawn } = require("child_process");
 const path = require("path");
 const zlib = require("zlib");
 
-const backend = require("./backend");
+const Backend = require("./backend");
 
 var server = http.createServer(function (req, res) {
     var repo = req.url.split("/")[1];
@@ -18,7 +18,7 @@ var server = http.createServer(function (req, res) {
 
     reqStream
         .pipe(
-            backend(req.url, function (err, service) {
+            new Backend(req.url, function (err, service) {
                 if (err) return res.end(err + "\n");
 
                 res.setHeader("content-type", service.type);
