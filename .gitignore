@@ -1,0 +1,9 @@
+.vscode/
+
+dist/
+repos/
+
+node_modules
+npm-debug.log
+bower_components
+package-lock.json
