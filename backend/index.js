@@ -6,6 +6,8 @@ const qs = require("querystring");
 
 const Service = require("./service.js");
 
+const gitServices = ["git-receive-pack", "git-upload-pack"];
+
 const regex = {
     "git-receive-pack": RegExp(
         "([0-9a-fA-F]+) ([0-9a-fA-F]+)" +
@@ -22,7 +24,7 @@ const fields = {
 
 class Backend extends Duplex {
     constructor(uri, cb) {
-        super(uri);
+        super();
 
         if (cb) {
             this.on("service", function (s) {
@@ -55,7 +57,7 @@ class Backend extends Duplex {
             this.service = parts[parts.length - 1];
         }
 
-        if (!(this.service in regex)) {
+        if (!gitServices.includes(this.service)) {
             return this.error("unsupported git service");
         }
 
@@ -74,7 +76,7 @@ class Backend extends Duplex {
     error(msg) {
         let err = typeof msg === "string" ? new Error(msg) : msg;
         process.nextTick(() => {
-            this.emit("error", errs);
+            this.emit("error", err);
         });
     }
 
